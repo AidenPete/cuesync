@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useEffect, useState } from "react";
 import { AdminLoading } from "@/components/admin/AdminLoading";
+import { AdminLogo } from "@/components/admin/AdminNavIcons";
 import { adminMessageError, adminPanelClassName } from "@/lib/admin-ui";
 import { inputClassName } from "@/lib/ui";
 import { SITE_NAME } from "@/lib/site";
@@ -65,8 +66,8 @@ function LoginForm() {
       <div className="w-full max-w-md space-y-6">
         <div className="text-center">
           <Link href="/admin/login" className="inline-flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-700 text-xl shadow-lg shadow-emerald-900/40">
-              🎱
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-700 text-white shadow-lg shadow-emerald-900/40">
+              <AdminLogo className="h-6 w-6" />
             </span>
           </Link>
           <p className="mt-4 text-sm font-medium uppercase tracking-[0.2em] text-emerald-300/80">

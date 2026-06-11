@@ -4,6 +4,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AdminLoading } from "@/components/admin/AdminLoading";
+import {
+  AdminNavIcon,
+  type AdminNavIconName,
+} from "@/components/admin/AdminNavIcons";
 
 export function AdminAuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -37,14 +41,19 @@ export function AdminAuthGuard({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-export const adminNavItems = [
-  { href: "/admin", label: "Dashboard", icon: "📊", exact: true },
-  { href: "/admin/products", label: "Products", icon: "🎱" },
-  { href: "/admin/orders", label: "Orders", icon: "📦" },
-  { href: "/admin/delivery", label: "Delivery", icon: "🚚" },
-  { href: "/admin/customers", label: "Customers", icon: "👤" },
-  { href: "/admin/preorders", label: "Preorders", icon: "💬" },
-] as const;
+export const adminNavItems: {
+  href: string;
+  label: string;
+  icon: AdminNavIconName;
+  exact?: boolean;
+}[] = [
+  { href: "/admin", label: "Dashboard", icon: "dashboard", exact: true },
+  { href: "/admin/products", label: "Products", icon: "products" },
+  { href: "/admin/orders", label: "Orders", icon: "orders" },
+  { href: "/admin/delivery", label: "Delivery", icon: "delivery" },
+  { href: "/admin/customers", label: "Customers", icon: "customers" },
+  { href: "/admin/preorders", label: "Preorders", icon: "preorders" },
+];
 
 export function AdminNavLink({
   href,
@@ -55,7 +64,7 @@ export function AdminNavLink({
 }: {
   href: string;
   label: string;
-  icon: string;
+  icon: AdminNavIconName;
   exact?: boolean;
   compact?: boolean;
 }) {
@@ -73,7 +82,13 @@ export function AdminNavLink({
           : "text-emerald-100/70 hover:bg-white/5 hover:text-white"
       }`}
     >
-      <span>{icon}</span>
+      <span
+        className={`flex shrink-0 items-center justify-center ${
+          active ? "text-emerald-300" : "text-emerald-100/50"
+        }`}
+      >
+        <AdminNavIcon name={icon} className={compact ? "h-4 w-4" : "h-5 w-5"} />
+      </span>
       {label}
     </Link>
   );

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { adminNavItems, AdminNavLink } from "@/components/admin/AdminAuthGuard";
+import { AdminLogo } from "@/components/admin/AdminNavIcons";
 import { SITE_NAME } from "@/lib/site";
 
 export function AdminSidebar() {
@@ -18,8 +19,8 @@ export function AdminSidebar() {
     <aside className="hidden w-64 shrink-0 flex-col border-r border-white/10 bg-[#062318]/95 backdrop-blur-md md:sticky md:top-0 md:flex md:max-h-dvh md:overflow-y-auto">
       <div className="border-b border-white/10 px-5 py-5">
         <Link href="/admin" className="group flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-700 text-lg shadow-lg shadow-emerald-900/40">
-            🎱
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-700 text-white shadow-lg shadow-emerald-900/40">
+            <AdminLogo className="h-5 w-5" />
           </span>
           <div>
             <p className="text-lg font-bold tracking-tight text-white">{SITE_NAME}</p>
@@ -62,8 +63,8 @@ export function AdminMobileNav() {
     <header className="sticky top-0 z-10 border-b border-white/10 bg-[#062318]/95 backdrop-blur-md md:hidden">
       <div className="flex items-center justify-between gap-3 px-4 py-3">
         <Link href="/admin" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-700 text-base">
-            🎱
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-700 text-white">
+            <AdminLogo className="h-4 w-4" />
           </span>
           <span className="font-bold text-white">Admin</span>
         </Link>
