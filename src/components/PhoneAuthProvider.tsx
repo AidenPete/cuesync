@@ -7,6 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 type PhoneAuthContextValue = {
   phone: string | null;
@@ -17,7 +18,11 @@ type PhoneAuthContextValue = {
 
 const PhoneAuthContext = createContext<PhoneAuthContextValue | null>(null);
 
+const POST_LOGOUT_PATHS = ["/orders", "/login"];
+
 export function PhoneAuthProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const pathname = usePathname();
   const [phone, setPhone] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -36,7 +41,10 @@ export function PhoneAuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(async () => {
     await fetch("/api/otp/logout", { method: "POST" });
     setPhone(null);
-  }, []);
+    if (POST_LOGOUT_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`))) {
+      router.replace("/shop");
+    }
+  }, [pathname, router]);
 
   useEffect(() => {
     refresh();
