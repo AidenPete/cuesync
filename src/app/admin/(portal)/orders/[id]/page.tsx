@@ -15,6 +15,7 @@ import {
   adminMessageSuccess,
 } from "@/lib/admin-ui";
 import { formatOrderDate } from "@/lib/orders";
+import { formatPhoneDisplay } from "@/lib/ui";
 import type { Order } from "@/lib/order-types";
 
 export default function AdminOrderDetailPage() {
@@ -55,7 +56,14 @@ export default function AdminOrderDetailPage() {
       <AdminPageHeader
         eyebrow="Order"
         title={order.id}
-        description={`Placed ${formatOrderDate(order.createdAt)} · ${formatKes(order.total)}`}
+        description={[
+          `Placed ${formatOrderDate(order.createdAt)} · ${formatKes(order.total)}`,
+          order.riderName
+            ? `Rider: ${order.riderName}${order.riderPhone ? ` · ${formatPhoneDisplay(order.riderPhone)}` : ""}`
+            : null,
+        ]
+          .filter(Boolean)
+          .join(" · ")}
         backHref="/admin/orders"
         backLabel="Orders"
         action={

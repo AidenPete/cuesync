@@ -20,6 +20,8 @@ type Props = {
     phone: string;
     deliveryLocation: string;
     status: OrderStatus;
+    riderName: string;
+    riderPhone: string;
   }) => Promise<void>;
   onDelete?: () => Promise<void>;
 };
@@ -29,6 +31,10 @@ export function OrderForm({ order, onSave, onDelete }: Props) {
   const [phone, setPhone] = useState(order.phone.replace(/^254/, "0"));
   const [deliveryLocation, setDeliveryLocation] = useState(order.deliveryLocation);
   const [status, setStatus] = useState<OrderStatus>(order.status);
+  const [riderName, setRiderName] = useState(order.riderName ?? "");
+  const [riderPhone, setRiderPhone] = useState(
+    order.riderPhone ? order.riderPhone.replace(/^254/, "0") : "",
+  );
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
@@ -40,7 +46,14 @@ export function OrderForm({ order, onSave, onDelete }: Props) {
     setSuccess("");
     setLoading(true);
     try {
-      await onSave({ name, phone, deliveryLocation, status });
+      await onSave({
+        name,
+        phone,
+        deliveryLocation,
+        status,
+        riderName,
+        riderPhone,
+      });
       setSuccess("Order updated.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save.");
@@ -96,6 +109,34 @@ export function OrderForm({ order, onSave, onDelete }: Props) {
           className={adminInputClassName}
         />
       </label>
+
+      <div className="space-y-3 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+        <div>
+          <h3 className="font-medium text-white">Delivery rider</h3>
+          <p className="text-sm text-emerald-100/60">
+            Person who delivered this order — for your records.
+          </p>
+        </div>
+        <label className="block space-y-2">
+          <span className={adminLabelClassName}>Rider name</span>
+          <input
+            value={riderName}
+            onChange={(event) => setRiderName(event.target.value)}
+            placeholder="e.g. James"
+            className={adminInputClassName}
+          />
+        </label>
+        <label className="block space-y-2">
+          <span className={adminLabelClassName}>Rider phone</span>
+          <input
+            value={riderPhone}
+            onChange={(event) => setRiderPhone(event.target.value)}
+            placeholder="07XX XXX XXX"
+            inputMode="tel"
+            className={adminInputClassName}
+          />
+        </label>
+      </div>
 
       <label className="block space-y-2">
         <span className={adminLabelClassName}>Status</span>

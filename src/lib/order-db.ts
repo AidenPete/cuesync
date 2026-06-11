@@ -111,7 +111,12 @@ export async function markOrderDeliveredById(id: string): Promise<Order | undefi
 
 export async function updateOrder(
   id: string,
-  updates: Partial<Pick<Order, "name" | "phone" | "deliveryLocation" | "status">>,
+  updates: Partial<
+    Pick<
+      Order,
+      "name" | "phone" | "deliveryLocation" | "status" | "riderName" | "riderPhone"
+    >
+  >,
 ): Promise<Order | undefined> {
   const orders = await readOrders();
   const index = orders.findIndex((order) => order.id === id);

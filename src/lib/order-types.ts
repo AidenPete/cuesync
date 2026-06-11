@@ -21,6 +21,9 @@ export type Order = {
   deliveredAt?: string;
   /** When the tracking link stops working (set after delivery). */
   accessExpiresAt?: string;
+  /** Person assigned to deliver this order (admin record). */
+  riderName?: string;
+  riderPhone?: string;
 };
 
 export type CheckoutRequest = {

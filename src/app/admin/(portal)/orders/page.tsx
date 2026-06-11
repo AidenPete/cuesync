@@ -156,6 +156,14 @@ export default function AdminOrdersPage() {
                     <p className="truncate text-sm text-emerald-100/50">
                       {order.deliveryLocation}
                     </p>
+                    {order.riderName && (
+                      <p className="mt-1 text-xs text-emerald-100/40">
+                        Rider: {order.riderName}
+                        {order.riderPhone
+                          ? ` · ${formatPhoneDisplay(order.riderPhone)}`
+                          : ""}
+                      </p>
+                    )}
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-bold text-emerald-300">
