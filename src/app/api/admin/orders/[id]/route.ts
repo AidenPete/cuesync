@@ -34,7 +34,7 @@ export async function PATCH(request: Request, { params }: Params) {
     name?: string;
     phone?: string;
     deliveryLocation?: string;
-    status?: "pending_delivery" | "delivered";
+    status?: "pending_delivery" | "in_transit" | "delivered";
     riderName?: string;
     riderPhone?: string;
   } = {};
@@ -50,7 +50,11 @@ export async function PATCH(request: Request, { params }: Params) {
     }
     updates.phone = phone;
   }
-  if (body.status === "pending_delivery" || body.status === "delivered") {
+  if (
+    body.status === "pending_delivery" ||
+    body.status === "in_transit" ||
+    body.status === "delivered"
+  ) {
     updates.status = body.status;
   }
 

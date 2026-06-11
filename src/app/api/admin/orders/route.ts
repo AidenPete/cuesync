@@ -11,7 +11,9 @@ export async function GET(request: Request) {
   const status = searchParams.get("status") as OrderStatus | null;
 
   const orders = await listOrders(
-    status === "pending_delivery" || status === "delivered"
+    status === "pending_delivery" ||
+      status === "in_transit" ||
+      status === "delivered"
       ? { status }
       : undefined,
   );

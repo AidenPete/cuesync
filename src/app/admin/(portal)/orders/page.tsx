@@ -19,6 +19,7 @@ type StatusFilter = "all" | OrderStatus;
 const FILTER_OPTIONS: { value: StatusFilter; label: string }[] = [
   { value: "all", label: "All" },
   { value: "pending_delivery", label: "Pending" },
+  { value: "in_transit", label: "On transit" },
   { value: "delivered", label: "Delivered" },
 ];
 
@@ -41,6 +42,7 @@ export default function AdminOrdersPage() {
       all: orders.length,
       pending_delivery: orders.filter((order) => order.status === "pending_delivery")
         .length,
+      in_transit: orders.filter((order) => order.status === "in_transit").length,
       delivered: orders.filter((order) => order.status === "delivered").length,
     }),
     [orders],
@@ -74,6 +76,8 @@ export default function AdminOrdersPage() {
       ? "No matching orders"
       : filter === "pending_delivery"
         ? "No pending orders"
+        : filter === "in_transit"
+          ? "No orders on transit"
         : filter === "delivered"
           ? "No delivered orders"
           : "No orders found";
@@ -82,7 +86,9 @@ export default function AdminOrdersPage() {
     search.trim().length > 0
       ? "Try a different search term or clear the search box."
       : filter === "pending_delivery"
-        ? "Every order has been delivered. Check the delivery queue when new orders come in."
+        ? "Every order has left the pending queue. Check on-transit orders or the delivery page."
+        : filter === "in_transit"
+          ? "Mark orders as on transit from the delivery queue when a rider goes out."
         : filter === "delivered"
           ? "Delivered orders will appear here once you mark them complete."
           : "Orders will appear here after checkout.";

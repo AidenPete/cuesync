@@ -12,7 +12,29 @@ export function sortOrdersNewestFirst(orders: Order[]): Order[] {
 }
 
 export function statusLabel(status: Order["status"]): string {
-  return status === "pending_delivery" ? "Pending delivery" : "Delivered";
+  switch (status) {
+    case "pending_delivery":
+      return "Pending delivery";
+    case "in_transit":
+      return "On transit";
+    case "delivered":
+      return "Delivered";
+  }
+}
+
+export function customerStatusLabel(status: Order["status"]): string {
+  switch (status) {
+    case "pending_delivery":
+      return "Preparing";
+    case "in_transit":
+      return "On the way";
+    case "delivered":
+      return "Delivered";
+  }
+}
+
+export function isOrderInFulfillment(status: Order["status"]): boolean {
+  return status === "pending_delivery" || status === "in_transit";
 }
 
 export function accessExpiryLabel(iso: string): string {

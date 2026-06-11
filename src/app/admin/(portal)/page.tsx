@@ -14,6 +14,7 @@ import type { SalesStats } from "@/lib/sales";
 
 type Stats = SalesStats & {
   pendingDelivery: number;
+  inTransit: number;
   ordersToday: number;
   productCount: number;
   customerCount: number;
@@ -27,7 +28,7 @@ type OrderRow = {
   id: string;
   name: string;
   total: number;
-  status: "pending_delivery" | "delivered";
+  status: "pending_delivery" | "in_transit" | "delivered";
   createdAt: string;
 };
 
@@ -64,7 +65,7 @@ export default function AdminDashboardPage() {
           label="Pending delivery"
           value={stats.pendingDelivery}
           href="/admin/delivery"
-          detail="Needs action"
+          detail={`${stats.inTransit} on transit`}
         />
         <AdminStatCard
           label="Orders today"

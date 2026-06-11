@@ -1,4 +1,4 @@
-export type OrderStatus = "pending_delivery" | "delivered";
+export type OrderStatus = "pending_delivery" | "in_transit" | "delivered";
 
 export type OrderItem = {
   productId: string;

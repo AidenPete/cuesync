@@ -4,13 +4,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePhoneAuth } from "@/components/PhoneAuthProvider";
 import { formatKes } from "@/lib/format";
+import { customerStatusLabel } from "@/lib/orders";
 import { formatPhoneDisplay } from "@/lib/ui";
 
 type OrderSummary = {
   id: string;
   token: string;
   total: number;
-  status: "pending_delivery" | "delivered";
+  status: "pending_delivery" | "in_transit" | "delivered";
   createdAt: string;
   deliveryLocation: string;
   itemCount: number;
@@ -110,10 +111,12 @@ export default function OrdersPage() {
                     className={`mt-1 inline-block rounded-full px-3 py-0.5 text-xs font-medium ${
                       order.status === "delivered"
                         ? "bg-emerald-500/20 text-emerald-200"
+                        : order.status === "in_transit"
+                          ? "bg-sky-500/20 text-sky-200"
                         : "bg-amber-500/20 text-amber-200"
                     }`}
                   >
-                    {order.status === "delivered" ? "Delivered" : "On the way"}
+                    {customerStatusLabel(order.status)}
                   </span>
                 </div>
               </div>

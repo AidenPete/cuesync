@@ -21,6 +21,7 @@ export async function GET() {
   const pendingDelivery = orders.filter(
     (order) => order.status === "pending_delivery",
   ).length;
+  const inTransit = orders.filter((order) => order.status === "in_transit").length;
   const delivered = orders.filter((order) => order.status === "delivered").length;
   const sales = computeSalesStats(orders);
   const today = new Date().toDateString();
@@ -40,6 +41,7 @@ export async function GET() {
       totalOrders: orders.length,
       orderCount: orders.length,
       pendingDelivery,
+      inTransit,
       delivered,
       revenue: sales.totalSales,
       totalSales: sales.totalSales,

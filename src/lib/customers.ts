@@ -131,7 +131,8 @@ export async function listCustomers(): Promise<CustomerSummary[]> {
         orderCount: 1,
         totalSpent: order.total,
         lastOrderAt: order.createdAt,
-        pendingCount: order.status === "pending_delivery" ? 1 : 0,
+        pendingCount:
+          order.status === "pending_delivery" || order.status === "in_transit" ? 1 : 0,
         wishlistCount: 0,
         preorderCount: 0,
         lastActivityAt: order.createdAt,
@@ -149,7 +150,7 @@ export async function listCustomers(): Promise<CustomerSummary[]> {
         existing.deliveryLocation = order.deliveryLocation;
       }
     }
-    if (order.status === "pending_delivery") {
+    if (order.status === "pending_delivery" || order.status === "in_transit") {
       existing.pendingCount += 1;
     }
     existing.lastActivityAt = latestTimestamp(

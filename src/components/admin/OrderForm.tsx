@@ -146,6 +146,7 @@ export function OrderForm({ order, onSave, onDelete }: Props) {
           className={adminInputClassName}
         >
           <option value="pending_delivery">Pending delivery</option>
+          <option value="in_transit">On transit</option>
           <option value="delivered">Delivered</option>
         </select>
       </label>

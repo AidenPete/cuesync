@@ -90,6 +90,12 @@ function TrackPageContent() {
             <span className="text-white">{order.deliveryLocation}</span>. This
             link stays active until delivery is complete.
           </p>
+        ) : order.status === "in_transit" ? (
+          <p className="text-emerald-100/80">
+            Your order is on the way to{" "}
+            <span className="text-white">{order.deliveryLocation}</span>. This
+            link stays active until delivery is complete.
+          </p>
         ) : (
           <p className="text-emerald-100/80">
             Delivered

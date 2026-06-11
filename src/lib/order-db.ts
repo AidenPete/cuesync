@@ -40,7 +40,9 @@ function createTrackToken() {
 }
 
 export function isTrackLinkValid(order: Order): boolean {
-  if (order.status === "pending_delivery") return true;
+  if (order.status === "pending_delivery" || order.status === "in_transit") {
+    return true;
+  }
   if (!order.accessExpiresAt) return false;
   return new Date(order.accessExpiresAt) > new Date();
 }
@@ -137,6 +139,14 @@ export async function updateOrder(
   }
 
   if (updates.status === "pending_delivery" && current.status === "delivered") {
+    next = {
+      ...next,
+      deliveredAt: undefined,
+      accessExpiresAt: undefined,
+    };
+  }
+
+  if (updates.status === "in_transit" && current.status === "delivered") {
     next = {
       ...next,
       deliveredAt: undefined,

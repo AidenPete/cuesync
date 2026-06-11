@@ -38,9 +38,11 @@ export function ReceiptView({ order, showSuccess = false }: Props) {
             </div>
             <span
               className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
-                order.status === "pending_delivery"
-                  ? "bg-amber-400/20 text-amber-200"
-                  : "bg-emerald-400/20 text-emerald-200"
+                order.status === "delivered"
+                  ? "bg-emerald-400/20 text-emerald-200"
+                  : order.status === "in_transit"
+                    ? "bg-sky-400/20 text-sky-200"
+                    : "bg-amber-400/20 text-amber-200"
               }`}
             >
               {statusLabel(order.status)}
