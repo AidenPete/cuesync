@@ -70,7 +70,7 @@ export function ShopDesktopSidebar() {
   ];
 
   return (
-    <aside className="hidden w-72 shrink-0 flex-col border-r border-white/10 bg-[#062318]/98 backdrop-blur-md md:flex md:max-h-dvh md:overflow-y-auto">
+    <aside className="hidden w-72 shrink-0 flex-col border-r border-white/10 bg-[#062318]/98 backdrop-blur-md md:sticky md:top-0 md:flex md:h-dvh">
       <div className="border-b border-white/10 px-5 py-5">
         <Link href="/shop" className="group flex items-center gap-3">
           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-700 text-white shadow-lg shadow-emerald-900/40">
