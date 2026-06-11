@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { lookupCustomer } from "@/lib/order-db";
+import { lookupCustomerProfile } from "@/lib/customers";
 import { getVerifiedPhone } from "@/lib/phone-session";
 import { normalizePhone } from "@/lib/format";
 
@@ -16,6 +16,6 @@ export async function GET(request: Request) {
     return NextResponse.json({ customer: null }, { status: 403 });
   }
 
-  const customer = await lookupCustomer(verifiedPhone);
+  const customer = await lookupCustomerProfile(verifiedPhone);
   return NextResponse.json({ customer });
 }

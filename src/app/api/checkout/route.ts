@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { upsertCustomerRecord } from "@/lib/customer-db";
+import { isValidKenyanPhone, normalizePhone } from "@/lib/format";
 import { getProductById, decrementStock } from "@/lib/product-db";
 import { saveOrder } from "@/lib/order-db";
 import { isInStock } from "@/lib/inventory";
@@ -23,6 +25,14 @@ export async function POST(request: Request) {
         success: false,
         message: "Name, delivery location, phone, and items are required.",
       },
+      { status: 400 },
+    );
+  }
+
+  const phone = normalizePhone(body.phone);
+  if (!isValidKenyanPhone(phone)) {
+    return NextResponse.json(
+      { success: false, message: "Enter a valid phone number." },
       { status: 400 },
     );
   }
@@ -75,7 +85,7 @@ export async function POST(request: Request) {
 
   const order = await saveOrder({
     name,
-    phone: body.phone,
+    phone,
     deliveryLocation,
     items: lineItems.map((item) => ({
       productId: item!.product.id,
@@ -86,6 +96,12 @@ export async function POST(request: Request) {
     })),
     total,
   });
+
+  try {
+    await upsertCustomerRecord({ phone, name, deliveryLocation });
+  } catch (error) {
+    console.warn("[CueSync checkout] Could not save customer profile:", error);
+  }
 
   for (const item of lineItems) {
     const result = await decrementStock(item!.product.id, item!.quantity);
@@ -98,7 +114,7 @@ export async function POST(request: Request) {
   const smsMessage = buildSmsMessage(name, trackUrl);
 
   console.log("[CueSync SMS mock]", {
-    to: formatPhoneDisplay(body.phone),
+    to: formatPhoneDisplay(phone),
     message: smsMessage,
   });
 
@@ -106,7 +122,7 @@ export async function POST(request: Request) {
     success: true,
     orderId: order.id,
     trackUrl,
-    message: `Mock SMS sent to ${formatPhoneDisplay(body.phone)}.`,
+    message: `Mock SMS sent to ${formatPhoneDisplay(phone)}.`,
     order,
   };
 

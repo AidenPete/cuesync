@@ -242,6 +242,26 @@ export async function updateCustomer(
   });
 }
 
+export async function lookupCustomerProfile(phone: string) {
+  const normalized = normalizePhone(phone);
+  const stored = await getCustomerRecord(normalized);
+  if (stored) {
+    return {
+      name: stored.name,
+      deliveryLocation: stored.deliveryLocation,
+    };
+  }
+
+  const orders = await findOrdersByPhone(normalized);
+  const latest = orders[0];
+  if (!latest) return null;
+
+  return {
+    name: latest.name,
+    deliveryLocation: latest.deliveryLocation,
+  };
+}
+
 export async function removeCustomer(phone: string) {
   const normalizedPhone = normalizePhone(phone);
   const orders = await findOrdersByPhone(normalizedPhone);
