@@ -125,7 +125,7 @@ export async function POST(request: Request) {
           notes?: string;
         };
 
-        const record = savePreorder({
+        const record = await savePreorder({
           name: args.name.trim(),
           phone: args.phone.trim(),
           product: args.product.trim(),

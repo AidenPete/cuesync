@@ -1,22 +1,70 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useCart } from "@/components/CartProvider";
+import { OtpForm } from "@/components/OtpForm";
+import { usePhoneAuth } from "@/components/PhoneAuthProvider";
 import { ProductImage } from "@/components/ProductImage";
 import { formatKes, isValidKenyanPhone, normalizePhone } from "@/lib/format";
-
-const inputClassName =
-  "w-full rounded-2xl border border-white/10 bg-[#041912] px-4 py-3 text-white outline-none ring-emerald-400/50 placeholder:text-white/30 focus:ring-2";
+import { inputClassName } from "@/lib/ui";
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, subtotal, clearCart } = useCart();
+  const { phone: verifiedPhone, refresh } = usePhoneAuth();
   const [name, setName] = useState("");
   const [deliveryLocation, setDeliveryLocation] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showVerify, setShowVerify] = useState(false);
+  const lastLookupPhone = useRef("");
+
+  const normalizedPhone = isValidKenyanPhone(phone) ? normalizePhone(phone) : "";
+  const phoneVerified =
+    verifiedPhone !== null && normalizedPhone === verifiedPhone;
+
+  useEffect(() => {
+    if (verifiedPhone && !phone) {
+      setPhone(verifiedPhone.replace(/^254/, "0"));
+    }
+  }, [verifiedPhone, phone]);
+
+  useEffect(() => {
+    if (!phoneVerified) {
+      setShowVerify(isValidKenyanPhone(phone));
+      return;
+    }
+
+    setShowVerify(false);
+    if (lastLookupPhone.current === normalizedPhone) return;
+
+    const controller = new AbortController();
+    const timer = window.setTimeout(async () => {
+      try {
+        const response = await fetch(
+          `/api/orders/lookup?phone=${encodeURIComponent(normalizedPhone)}`,
+          { signal: controller.signal },
+        );
+        if (response.status === 401 || response.status === 403) return;
+        const data = await response.json();
+        if (data.customer) {
+          lastLookupPhone.current = normalizedPhone;
+          setName(data.customer.name);
+          setDeliveryLocation(data.customer.deliveryLocation);
+        }
+      } catch {
+        // ignore lookup errors
+      }
+    }, 400);
+
+    return () => {
+      controller.abort();
+      window.clearTimeout(timer);
+    };
+  }, [phoneVerified, normalizedPhone, phone]);
 
   if (items.length === 0) {
     return (
@@ -74,13 +122,7 @@ export default function CheckoutPage() {
       }
 
       clearCart();
-
-      const params = new URLSearchParams({
-        orderId: data.orderId,
-        name: trimmedName,
-        delivery: trimmedLocation,
-      });
-      router.push(`/order/success?${params.toString()}`);
+      router.push(`/track/${data.order.token}?new=1`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
@@ -94,8 +136,9 @@ export default function CheckoutPage() {
         <div>
           <h1 className="text-3xl font-bold text-white">Checkout</h1>
           <p className="mt-2 text-emerald-100/70">
-            Your name, delivery location, and M-Pesa number — that&apos;s all we
-            need.
+            Enter your details — we&apos;ll text you a link to track delivery
+            and view your receipt. Returning? Verify your number to load saved
+            details.
           </p>
         </div>
 
@@ -117,20 +160,6 @@ export default function CheckoutPage() {
 
           <label className="block space-y-2">
             <span className="text-sm font-medium text-emerald-100">
-              Delivery location
-            </span>
-            <input
-              type="text"
-              value={deliveryLocation}
-              onChange={(event) => setDeliveryLocation(event.target.value)}
-              placeholder="Westlands, Nairobi"
-              autoComplete="street-address"
-              className={inputClassName}
-            />
-          </label>
-
-          <label className="block space-y-2">
-            <span className="text-sm font-medium text-emerald-100">
               M-Pesa phone number
             </span>
             <input
@@ -139,6 +168,42 @@ export default function CheckoutPage() {
               onChange={(event) => setPhone(event.target.value)}
               placeholder="0712 345 678"
               autoComplete="tel"
+              className={inputClassName}
+            />
+            <p className="text-xs text-emerald-100/50">
+              We&apos;ll send your tracking link to this number.
+            </p>
+          </label>
+
+          {showVerify && !phoneVerified && (
+            <OtpForm
+              compact
+              initialPhone={phone}
+              submitLabel="Verify & load details"
+              onVerified={async (verified) => {
+                await refresh();
+                lastLookupPhone.current = "";
+                setPhone(verified.replace(/^254/, "0"));
+              }}
+            />
+          )}
+
+          {phoneVerified && (
+            <p className="rounded-xl bg-emerald-500/15 px-4 py-2 text-xs text-emerald-100">
+              Phone verified — your saved details will load if we have them.
+            </p>
+          )}
+
+          <label className="block space-y-2">
+            <span className="text-sm font-medium text-emerald-100">
+              Delivery location
+            </span>
+            <input
+              type="text"
+              value={deliveryLocation}
+              onChange={(event) => setDeliveryLocation(event.target.value)}
+              placeholder="Westlands, Nairobi"
+              autoComplete="street-address"
               className={inputClassName}
             />
           </label>
@@ -157,7 +222,7 @@ export default function CheckoutPage() {
             {loading ? (
               <>
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                Sending STK push…
+                Processing payment…
               </>
             ) : (
               <>Pay {formatKes(subtotal)} with M-Pesa</>
@@ -165,7 +230,7 @@ export default function CheckoutPage() {
           </button>
 
           <p className="text-center text-xs text-emerald-100/50">
-            Demo mode — no real payment is processed yet.
+            Demo mode — mock M-Pesa & SMS. No real payment sent.
           </p>
         </form>
       </div>

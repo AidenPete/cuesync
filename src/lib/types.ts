@@ -14,7 +14,10 @@ export type Product = {
   description: string;
   image: string;
   accent: string;
+  highlights: string[];
   featured?: boolean;
+  /** Units available to sell. 0 = out of stock. */
+  stock: number;
 };
 
 export type CartItem = {
@@ -29,8 +32,4 @@ export type CheckoutRequest = {
   items: { id: string; quantity: number }[];
 };
 
-export type CheckoutResponse = {
-  success: boolean;
-  orderId: string;
-  message: string;
-};
+export type { Order, OrderItem, OrderStatus, CheckoutResponse } from "@/lib/order-types";

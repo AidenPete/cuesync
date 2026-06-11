@@ -12,6 +12,7 @@
 
 body {
   font-family: var(--font-outfit), system-ui, sans-serif;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at 20% 0%, #0f5132 0%, transparent 45%),
     radial-gradient(circle at 80% 10%, #134e4a 0%, transparent 35%),
@@ -26,4 +27,28 @@ body {
 
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+
+  #receipt {
+    border: 1px solid #ddd !important;
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+
+  #receipt * {
+    color: black !important;
+  }
 }

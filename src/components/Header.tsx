@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AuthNav } from "@/components/AuthNav";
 import { CartButton } from "@/components/CartButton";
 import { SITE_NAME } from "@/lib/site";
 
@@ -25,6 +26,7 @@ export function Header() {
           <Link href="/qr" className="transition hover:text-white">
             Share QR
           </Link>
+          <AuthNav />
         </nav>
 
         <CartButton />

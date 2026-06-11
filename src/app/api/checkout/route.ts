@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
-import { getProduct } from "@/lib/products";
-import type { CheckoutRequest, CheckoutResponse } from "@/lib/types";
+import { getProductById, decrementStock } from "@/lib/product-db";
+import { saveOrder } from "@/lib/order-db";
+import { isInStock } from "@/lib/inventory";
+import type { CheckoutRequest, CheckoutResponse } from "@/lib/order-types";
+import { SITE_URL } from "@/lib/site";
+import { formatPhoneDisplay } from "@/lib/ui";
 
-function createOrderId() {
-  return `CS${Date.now().toString(36).toUpperCase()}`;
+function buildSmsMessage(name: string, trackUrl: string) {
+  const firstName = name.split(" ")[0];
+  return `Hi ${firstName}! Your CueSync order is confirmed. Track delivery & view receipt: ${trackUrl}`;
 }
 
 export async function POST(request: Request) {
@@ -22,13 +27,15 @@ export async function POST(request: Request) {
     );
   }
 
-  const lineItems = body.items
-    .map((item) => {
-      const product = getProduct(item.id);
-      if (!product) return null;
-      return { product, quantity: item.quantity };
-    })
-    .filter(Boolean);
+  const lineItems = (
+    await Promise.all(
+      body.items.map(async (item) => {
+        const product = await getProductById(item.id);
+        if (!product) return null;
+        return { product, quantity: item.quantity };
+      }),
+    )
+  ).filter(Boolean);
 
   if (lineItems.length === 0) {
     return NextResponse.json(
@@ -37,31 +44,61 @@ export async function POST(request: Request) {
     );
   }
 
+  for (const item of lineItems) {
+    if (!isInStock(item!.product, item!.quantity)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `${item!.product.name} only has ${item!.product.stock} left in stock.`,
+        },
+        { status: 400 },
+      );
+    }
+  }
+
   const total = lineItems.reduce(
     (sum, item) => sum + item!.product.price * item!.quantity,
     0,
   );
 
-  // Simulate Daraja STK push delay
   await new Promise((resolve) => setTimeout(resolve, 1800));
+
+  const order = await saveOrder({
+    name,
+    phone: body.phone,
+    deliveryLocation,
+    items: lineItems.map((item) => ({
+      productId: item!.product.id,
+      name: item!.product.name,
+      image: item!.product.image,
+      price: item!.product.price,
+      quantity: item!.quantity,
+    })),
+    total,
+  });
+
+  for (const item of lineItems) {
+    const result = await decrementStock(item!.product.id, item!.quantity);
+    if (!result.ok) {
+      console.warn("[CueSync checkout] Stock decrement failed for", item!.product.id);
+    }
+  }
+
+  const trackUrl = `${SITE_URL}/track/${order.token}`;
+  const smsMessage = buildSmsMessage(name, trackUrl);
+
+  console.log("[CueSync SMS mock]", {
+    to: formatPhoneDisplay(body.phone),
+    message: smsMessage,
+  });
 
   const response: CheckoutResponse = {
     success: true,
-    orderId: createOrderId(),
-    message: `Mock M-Pesa STK push sent to ${body.phone} for KES ${total}.`,
+    orderId: order.id,
+    trackUrl,
+    message: `Mock SMS sent to ${formatPhoneDisplay(body.phone)}.`,
+    order,
   };
-
-  console.log("[CueSync mock checkout]", {
-    orderId: response.orderId,
-    name,
-    deliveryLocation,
-    phone: body.phone,
-    total,
-    items: lineItems.map((item) => ({
-      id: item!.product.id,
-      qty: item!.quantity,
-    })),
-  });
 
   return NextResponse.json(response);
 }

@@ -25,3 +25,19 @@ export function getProductsByCategory(category: Category | "all"): Product[] {
   if (category === "all") return products;
   return products.filter((product) => product.category === category);
 }
+
+export function getCategoryLabel(category: Category): string {
+  const match = categories.find((entry) => entry.id === category);
+  return match?.label ?? category;
+}
+
+export function getAllProductIds(): string[] {
+  return products.map((product) => product.id);
+}
+
+export function slugifyProductId(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}

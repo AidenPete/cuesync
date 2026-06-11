@@ -7,7 +7,13 @@
     "description": "Canadian maple shaft, leather tip, balanced for smooth strokes.",
     "image": "/products/cue-pro-maple.jpg",
     "accent": "#1a6b4a",
-    "featured": true
+    "highlights": [
+      "Canadian maple shaft with pro taper",
+      "Leather tip, pre-shaped and scuffed",
+      "19–21 oz weight range, ideal for daily play"
+    ],
+    "featured": true,
+    "stock": 8
   },
   {
     "id": "cue-break-carbon",
@@ -17,7 +23,13 @@
     "description": "Lightweight carbon fiber break cue with explosive power transfer.",
     "image": "/products/cue-break-carbon.jpg",
     "accent": "#2d3748",
-    "featured": true
+    "highlights": [
+      "Carbon fiber construction for maximum transfer",
+      "Hard phenolic tip for break shots",
+      "Lightweight design reduces arm fatigue"
+    ],
+    "featured": true,
+    "stock": 3
   },
   {
     "id": "cue-jump",
@@ -26,7 +38,13 @@
     "price": 9800,
     "description": "Compact jump cue for clearing obstacles with precision.",
     "image": "/products/cue-jump.jpg",
-    "accent": "#744210"
+    "accent": "#744210",
+    "highlights": [
+      "42\" length for tight jump angles",
+      "Stiff shaft for controlled pop",
+      "Includes matching hard jump tip"
+    ],
+    "stock": 0
   },
   {
     "id": "balls-aramith",
@@ -36,7 +54,13 @@
     "description": "Tournament-grade phenolic resin balls, 2¼\" standard size.",
     "image": "/products/balls-aramith.jpg",
     "accent": "#9b2c2c",
-    "featured": true
+    "highlights": [
+      "Phenolic resin — same material used in pro tournaments",
+      "Standard 2¼\" size, full 16-ball set",
+      "High-gloss finish holds up for years"
+    ],
+    "featured": true,
+    "stock": 5
   },
   {
     "id": "balls-training",
@@ -45,7 +69,13 @@
     "price": 4500,
     "description": "Marked practice balls for aiming drills and spin control.",
     "image": "/products/balls-training.jpg",
-    "accent": "#2c5282"
+    "accent": "#2c5282",
+    "highlights": [
+      "Marked with aim points and contact zones",
+      "Great for learning spin and draw",
+      "Durable resin for club and home tables"
+    ],
+    "stock": 12
   },
   {
     "id": "chalk-master",
@@ -54,7 +84,13 @@
     "price": 1200,
     "description": "Premium blue chalk cubes — less miscue, longer hold.",
     "image": "/products/chalk-master.jpg",
-    "accent": "#2b6cb0"
+    "accent": "#2b6cb0",
+    "highlights": [
+      "Box of 12 cubes — great value",
+      "Classic blue, works on all tip types",
+      "Consistent coat, minimal kick"
+    ],
+    "stock": 20
   },
   {
     "id": "chalk-taom",
@@ -63,7 +99,13 @@
     "price": 2800,
     "description": "Low-kick formula favored by pros. One cube lasts longer.",
     "image": "/products/chalk-taom.jpg",
-    "accent": "#6b46c1"
+    "accent": "#6b46c1",
+    "highlights": [
+      "Soft formula — less miscue on draw shots",
+      "Long-lasting single cube",
+      "Low dust, keeps felt cleaner"
+    ],
+    "stock": 15
   },
   {
     "id": "glove-left",
@@ -72,7 +114,13 @@
     "price": 1800,
     "description": "Smooth Lycra bridge glove for a friction-free stroke.",
     "image": "/products/glove-left.jpg",
-    "accent": "#285e61"
+    "accent": "#285e61",
+    "highlights": [
+      "Stretch Lycra fits most hand sizes",
+      "Open fingertips for bridge control",
+      "Reduces cue drag through the bridge hand"
+    ],
+    "stock": 6
   },
   {
     "id": "case-hard",
@@ -81,7 +129,13 @@
     "price": 8500,
     "description": "Protects two butts and two shafts with padded dividers.",
     "image": "/products/case-hard.jpg",
-    "accent": "#4a5568"
+    "accent": "#4a5568",
+    "highlights": [
+      "Holds 2 butts + 2 shafts",
+      "Rigid shell with padded interior",
+      "Shoulder strap and carry handle"
+    ],
+    "stock": 4
   },
   {
     "id": "case-soft",
@@ -90,7 +144,13 @@
     "price": 2200,
     "description": "Lightweight nylon sleeve with shoulder strap.",
     "image": "/products/case-soft.jpg",
-    "accent": "#2f855a"
+    "accent": "#2f855a",
+    "highlights": [
+      "Fits one two-piece cue",
+      "Padded lining prevents dings",
+      "Lightweight for travel to the club"
+    ],
+    "stock": 10
   },
   {
     "id": "table-brush",
@@ -99,7 +159,13 @@
     "price": 3500,
     "description": "Horsehair brush and rail cleaner for felt maintenance.",
     "image": "/products/table-brush.jpg",
-    "accent": "#975a16"
+    "accent": "#975a16",
+    "highlights": [
+      "Horsehair brush — gentle on felt",
+      "Rail brush for cushion cleaning",
+      "Extends cloth life with regular use"
+    ],
+    "stock": 2
   },
   {
     "id": "table-cover",
@@ -108,6 +174,12 @@
     "price": 6200,
     "description": "Water-resistant cover for 7ft and 8ft tables.",
     "image": "/products/table-cover.jpg",
-    "accent": "#1a365d"
+    "accent": "#1a365d",
+    "highlights": [
+      "Fits 7ft and 8ft tables",
+      "Water-resistant outer layer",
+      "Protects felt from dust and spills"
+    ],
+    "stock": 7
   }
 ]

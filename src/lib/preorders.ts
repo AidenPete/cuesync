@@ -1,24 +1,47 @@
-import type { PreorderRecord, PreorderRequest } from "@/lib/chat-types";
+import type { PreorderRecord, PreorderRequest } from "@/lib/product-request-types";
+import {
+  deleteProductRequest,
+  getProductRequests,
+  saveProductRequest,
+} from "@/lib/product-requests";
 
-const preorders: PreorderRecord[] = [];
+export async function savePreorder(request: PreorderRequest): Promise<PreorderRecord> {
+  const record = await saveProductRequest({
+    type: "preorder",
+    source: "chat",
+    productName: request.product,
+    name: request.name,
+    phone: request.phone,
+    deliveryLocation: request.deliveryLocation,
+    notes: request.notes,
+  });
 
-function createPreorderId() {
-  return `PO${Date.now().toString(36).toUpperCase()}`;
-}
-
-export function savePreorder(request: PreorderRequest): PreorderRecord {
-  const record: PreorderRecord = {
-    id: createPreorderId(),
-    createdAt: new Date().toISOString(),
-    ...request,
+  return {
+    id: record.id,
+    createdAt: record.createdAt,
+    name: record.name,
+    phone: record.phone,
+    product: record.productName,
+    deliveryLocation: record.deliveryLocation ?? "",
+    notes: record.notes,
   };
-
-  preorders.push(record);
-  console.log("[CueSync preorder]", record);
-
-  return record;
 }
 
-export function getPreorders(): PreorderRecord[] {
-  return [...preorders];
+export async function getPreorders(): Promise<PreorderRecord[]> {
+  const requests = await getProductRequests({ type: "preorder", source: "chat" });
+  return requests.map((request) => ({
+    id: request.id,
+    createdAt: request.createdAt,
+    name: request.name,
+    phone: request.phone,
+    product: request.productName,
+    deliveryLocation: request.deliveryLocation ?? "",
+    notes: request.notes,
+  }));
 }
+
+export async function deletePreorder(id: string): Promise<boolean> {
+  return deleteProductRequest(id);
+}
+
+export { getProductRequests, saveProductRequest, deleteProductRequest };

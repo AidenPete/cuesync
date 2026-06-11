@@ -8,6 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { isInStock, maxAddQuantity } from "@/lib/inventory";
 import type { CartItem, Product } from "@/lib/types";
 
 type CartContextValue = {
@@ -50,6 +51,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addItem = useCallback((product: Product) => {
     setItems((current) => {
       const existing = current.find((item) => item.product.id === product.id);
+      const currentQty = existing?.quantity ?? 0;
+      if (!isInStock(product, currentQty + 1)) return current;
+
       if (existing) {
         return current.map((item) =>
           item.product.id === product.id
@@ -75,9 +79,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     setItems((current) =>
-      current.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item,
-      ),
+      current.map((item) => {
+        if (item.product.id !== productId) return item;
+        const capped = Math.min(quantity, maxAddQuantity(item.product, 0));
+        return capped > 0 ? { ...item, quantity: capped } : item;
+      }).filter((item) => item.product.id !== productId || item.quantity > 0),
     );
   }, []);
 

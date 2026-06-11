@@ -1,18 +1,27 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CategoryPills } from "@/components/CategoryPills";
 import { ProductCard } from "@/components/ProductCard";
-import { categories, getProductsByCategory } from "@/lib/products";
-import type { Category } from "@/lib/types";
+import { categories } from "@/lib/products";
+import type { Category, Product } from "@/lib/types";
 
 export default function ShopPage() {
   const [activeCategory, setActiveCategory] = useState<Category | "all">("all");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const products = useMemo(
-    () => getProductsByCategory(activeCategory),
-    [activeCategory],
-  );
+  useEffect(() => {
+    fetch("/api/products")
+      .then((response) => response.json())
+      .then((data) => setProducts(data.products ?? []))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const filtered = useMemo(() => {
+    if (activeCategory === "all") return products;
+    return products.filter((product) => product.category === activeCategory);
+  }, [products, activeCategory]);
 
   return (
     <div className="space-y-8">
@@ -24,7 +33,7 @@ export default function ShopPage() {
           Pool & billiard accessories
         </h1>
         <p className="max-w-2xl text-emerald-100/70">
-          Tap a category, add items to your cart, then checkout with M-Pesa.
+          Tap an item for details, add to cart, then checkout with M-Pesa.
         </p>
       </div>
 
@@ -35,9 +44,13 @@ export default function ShopPage() {
       />
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        {loading ? (
+          <p className="text-emerald-100/60">Loading catalogue…</p>
+        ) : (
+          filtered.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))
+        )}
       </div>
     </div>
   );

@@ -87,7 +87,7 @@ export default function HomePage() {
           {featured.map((product) => (
             <Link
               key={product.id}
-              href="/shop"
+              href={`/shop/${product.id}`}
               className="group overflow-hidden rounded-3xl border border-white/10 bg-white/5 transition hover:border-emerald-400/30"
             >
               <div className="relative h-40 overflow-hidden">

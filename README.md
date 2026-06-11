@@ -8,7 +8,11 @@ Simple, mobile-first ecommerce site for pool and billiard accessories.
 
 1. Customer scans the QR code at your shop → opens the catalogue
 2. Browse products, add to cart
-3. Checkout with M-Pesa (mock STK push for now)
+3. Checkout with name, phone & delivery location (no account)
+4. SMS with a tracking link → view receipt & delivery status
+5. Link stays active until delivery, then expires after 7 days
+
+Returning customers: enter your phone at checkout and name/location auto-fill from your last order.
 
 ## Pages
 
@@ -16,10 +20,11 @@ Simple, mobile-first ecommerce site for pool and billiard accessories.
 |-------|---------|
 | `/` | Landing page |
 | `/shop` | Product catalogue (QR destination) |
+| `/shop/[id]` | Product details |
 | `/cart` | Shopping cart |
-| `/checkout` | M-Pesa payment |
+| `/checkout` | M-Pesa payment + details |
+| `/track/[token]` | Receipt & delivery status (from SMS link) |
 | `/qr` | Printable/downloadable QR code |
-| `/order/success` | Order confirmation |
 
 ## Shop assistant (AI chatbot)
 
@@ -60,6 +65,15 @@ CueSync is a Progressive Web App. On mobile, users can **Add to Home Screen** / 
 - **Icons:** `public/icons/` — regenerate with `npm run icons`
 
 Requires **HTTPS** in production (localhost works for dev).
+
+## Orders & SMS tracking
+
+- Orders stored in `data/orders.json` (use a database in production)
+- Each order gets a secure link: `/track/[token]`
+- **Pending delivery:** link always works
+- **After delivery:** link works for 7 more days, then expires
+- Mark delivered (demo): `POST /api/orders/[token]/deliver`
+- SMS is mocked — message logged to server console; wire Africa's Talking or Twilio for live SMS
 
 ## M-Pesa (live)
 
