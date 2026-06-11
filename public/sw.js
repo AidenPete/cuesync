@@ -1,4 +1,4 @@
-const CACHE = "cuesync-v3";
+const CACHE = "cuesync-v4";
 const OFFLINE_URL = "/offline";
 
 const PRECACHE = [OFFLINE_URL, "/icons/icon-192.png", "/icons/icon-512.png"];
