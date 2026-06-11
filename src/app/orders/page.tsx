@@ -1,8 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePhoneAuth } from "@/components/PhoneAuthProvider";
 import { formatKes } from "@/lib/format";
 import { formatPhoneDisplay } from "@/lib/ui";
@@ -20,7 +19,6 @@ type OrderSummary = {
 };
 
 export default function OrdersPage() {
-  const router = useRouter();
   const { phone, loading: authLoading } = usePhoneAuth();
   const [orders, setOrders] = useState<OrderSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -28,7 +26,7 @@ export default function OrdersPage() {
   useEffect(() => {
     if (authLoading) return;
     if (!phone) {
-      router.replace("/login?next=/orders");
+      setLoading(false);
       return;
     }
 
@@ -36,12 +34,30 @@ export default function OrdersPage() {
       .then((response) => response.json())
       .then((data) => setOrders(data.orders ?? []))
       .finally(() => setLoading(false));
-  }, [phone, authLoading, router]);
+  }, [phone, authLoading]);
 
-  if (authLoading || !phone || loading) {
+  if (authLoading || loading) {
     return (
       <div className="mx-auto max-w-2xl animate-pulse rounded-3xl border border-white/10 bg-white/5 p-10 text-center text-emerald-100/60">
         Loading your orders…
+      </div>
+    );
+  }
+
+  if (!phone) {
+    return (
+      <div className="mx-auto max-w-lg rounded-3xl border border-white/10 bg-white/5 p-10 text-center">
+        <p className="text-5xl">🔐</p>
+        <h1 className="mt-4 text-2xl font-semibold">Verify your phone</h1>
+        <p className="mt-2 text-emerald-100/70">
+          Sign in with a one-time SMS code to see your orders.
+        </p>
+        <Link
+          href="/login?next=/orders"
+          className="mt-6 inline-block rounded-full bg-emerald-500 px-8 py-3 font-semibold text-white transition hover:bg-emerald-400"
+        >
+          Sign in with SMS
+        </Link>
       </div>
     );
   }
