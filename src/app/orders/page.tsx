@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePhoneAuth } from "@/components/PhoneAuthProvider";
+import { DeliveryTimeline } from "@/components/shop/DeliveryTimeline";
 import { formatKes } from "@/lib/format";
 import { customerStatusLabel } from "@/lib/orders";
 import { formatPhoneDisplay } from "@/lib/ui";
@@ -65,11 +66,19 @@ export default function OrdersPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-white">Your orders</h1>
-        <p className="mt-2 text-emerald-100/70">
-          Signed in as {formatPhoneDisplay(phone)}
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-bold text-white">Your orders</h1>
+          <p className="mt-2 text-emerald-100/70">
+            Signed in as {formatPhoneDisplay(phone)}
+          </p>
+        </div>
+        <Link
+          href="/account"
+          className="rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-emerald-100/80 transition hover:bg-white/5 hover:text-white"
+        >
+          Account
+        </Link>
       </div>
 
       {orders.length === 0 ? (
@@ -121,7 +130,8 @@ export default function OrdersPage() {
                 </div>
               </div>
               {order.linkActive && (
-                <div className="mt-4">
+                <div className="mt-4 space-y-4">
+                  <DeliveryTimeline status={order.status} />
                   <Link
                     href={`/track/${order.token}`}
                     className="inline-flex rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"

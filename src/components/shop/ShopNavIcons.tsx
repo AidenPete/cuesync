@@ -4,7 +4,9 @@ export type ShopNavIconName =
   | "cart"
   | "orders"
   | "account"
-  | "qr";
+  | "qr"
+  | "menu"
+  | "help";
 
 type IconProps = {
   name: ShopNavIconName;
@@ -66,6 +68,28 @@ function IconPaths({ name }: { name: ShopNavIconName }) {
           <rect x="14" y="4" width="6" height="6" rx="1" {...stroke} />
           <rect x="4" y="14" width="6" height="6" rx="1" {...stroke} />
           <path d="M14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z" {...stroke} />
+        </>
+      );
+    case "menu":
+      return (
+        <>
+          <circle cx="7" cy="7" r="1.5" fill="currentColor" stroke="none" />
+          <circle cx="12" cy="7" r="1.5" fill="currentColor" stroke="none" />
+          <circle cx="17" cy="7" r="1.5" fill="currentColor" stroke="none" />
+          <circle cx="7" cy="12" r="1.5" fill="currentColor" stroke="none" />
+          <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+          <circle cx="17" cy="12" r="1.5" fill="currentColor" stroke="none" />
+          <circle cx="7" cy="17" r="1.5" fill="currentColor" stroke="none" />
+          <circle cx="12" cy="17" r="1.5" fill="currentColor" stroke="none" />
+          <circle cx="17" cy="17" r="1.5" fill="currentColor" stroke="none" />
+        </>
+      );
+    case "help":
+      return (
+        <>
+          <circle cx="12" cy="12" r="8.5" {...stroke} />
+          <path d="M9.5 9.5a2.75 2.75 0 0 1 5 1.5c0 2-2.75 2.25-2.75 4" {...stroke} />
+          <circle cx="12" cy="17" r="0.75" fill="currentColor" stroke="none" />
         </>
       );
   }

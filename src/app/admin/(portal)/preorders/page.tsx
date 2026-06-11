@@ -29,7 +29,7 @@ const EMPTY_COPY: Record<Filter, { title: string; description: string }> = {
   },
   wishlist: {
     title: "No wishlists",
-    description: "Wishlist saves from the shop will appear here.",
+    description: "Wishlists from the chat assistant will appear here. The shop uses preorders only.",
   },
 };
 
@@ -79,7 +79,7 @@ export default function AdminPreordersPage() {
       <AdminPageHeader
         eyebrow="Demand"
         title="Preorders & wishlists"
-        description="Customer requests for out-of-stock items and saved wishlists from the shop and chat."
+        description="Customer preorders from the shop and chat assistant. Wishlists are collected via chat only."
       />
 
       <div className="flex flex-wrap gap-2">

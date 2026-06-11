@@ -18,7 +18,7 @@ type PhoneAuthContextValue = {
 
 const PhoneAuthContext = createContext<PhoneAuthContextValue | null>(null);
 
-const POST_LOGOUT_PATHS = ["/orders", "/login"];
+const POST_LOGOUT_PATHS = ["/orders", "/login", "/account"];
 
 export function PhoneAuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();

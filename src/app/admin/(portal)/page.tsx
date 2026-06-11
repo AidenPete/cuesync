@@ -60,12 +60,18 @@ export default function AdminDashboardPage() {
 
       <AdminSalesSummary stats={stats} />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <AdminStatCard
           label="Pending delivery"
           value={stats.pendingDelivery}
           href="/admin/delivery"
           detail={`${stats.inTransit} on transit`}
+        />
+        <AdminStatCard
+          label="On transit"
+          value={stats.inTransit}
+          href="/admin/delivery"
+          detail="Out for delivery"
         />
         <AdminStatCard
           label="Orders today"

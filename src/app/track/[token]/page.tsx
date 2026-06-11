@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { ReceiptView } from "@/components/ReceiptView";
+import { DeliveryTimeline } from "@/components/shop/DeliveryTimeline";
 import { accessExpiryLabel } from "@/lib/orders";
 import type { Order } from "@/lib/order-types";
 import { formatPhoneDisplay } from "@/lib/ui";
@@ -53,8 +54,14 @@ function TrackPageContent() {
           the shop with your phone number.
         </p>
         <Link
+          href="/contact"
+          className="mt-4 inline-flex rounded-full border border-white/20 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
+        >
+          Contact support
+        </Link>
+        <Link
           href="/shop"
-          className="inline-flex rounded-full bg-emerald-500 px-6 py-3 font-semibold text-[#062318]"
+          className="mt-3 inline-flex rounded-full bg-emerald-500 px-6 py-3 font-semibold text-[#062318]"
         >
           Back to shop
         </Link>
@@ -77,38 +84,27 @@ function TrackPageContent() {
             </span>
             . Bookmark this page or use the link from your SMS.
           </p>
+          <Link
+            href="/login?next=/orders"
+            className="mt-4 inline-flex rounded-full border border-white/20 px-5 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+          >
+            Sign in to see all orders
+          </Link>
         </div>
       )}
 
       <ReceiptView order={order} showSuccess={false} />
 
-      <div className="mx-auto max-w-lg space-y-3 rounded-2xl border border-white/10 bg-white/5 p-5 text-sm">
-        <h2 className="font-semibold text-white">Delivery status</h2>
-        {order.status === "pending_delivery" ? (
-          <p className="text-emerald-100/80">
-            Your order is being prepared for delivery to{" "}
-            <span className="text-white">{order.deliveryLocation}</span>. This
-            link stays active until delivery is complete.
-          </p>
-        ) : order.status === "in_transit" ? (
-          <p className="text-emerald-100/80">
-            Your order is on the way to{" "}
-            <span className="text-white">{order.deliveryLocation}</span>. This
-            link stays active until delivery is complete.
-          </p>
-        ) : (
-          <p className="text-emerald-100/80">
-            Delivered
-            {order.deliveredAt
-              ? ` on ${accessExpiryLabel(order.deliveredAt)}`
-              : ""}
-            . You can view this receipt until{" "}
-            {order.accessExpiresAt
-              ? accessExpiryLabel(order.accessExpiresAt)
-              : "the link expires"}
-            .
-          </p>
-        )}
+      <div className="mx-auto max-w-lg space-y-4 rounded-2xl border border-white/10 bg-white/5 p-5">
+        <h2 className="font-semibold text-white">Delivery progress</h2>
+        <DeliveryTimeline status={order.status} />
+        <p className="text-sm text-emerald-100/70">
+          Delivering to{" "}
+          <span className="font-medium text-white">{order.deliveryLocation}</span>
+          {order.status === "delivered" && order.deliveredAt
+            ? ` · Delivered ${accessExpiryLabel(order.deliveredAt)}`
+            : ""}
+        </p>
       </div>
 
       <div className="mx-auto flex max-w-lg justify-center gap-3 no-print">

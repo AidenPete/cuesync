@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AdminProductImage } from "@/components/admin/AdminProductImage";
 import { ProductShopLink } from "@/components/admin/ProductShopLink";
 import { StockBadge } from "@/components/StockBadge";
@@ -10,14 +10,24 @@ import { AdminLoading } from "@/components/admin/AdminLoading";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { formatKes } from "@/lib/format";
 import { adminButtonPrimary, adminButtonSecondary, adminCardClassName } from "@/lib/admin-ui";
-import { getAvailability, LOW_STOCK_THRESHOLD } from "@/lib/inventory";
+import { getAvailability } from "@/lib/inventory";
 import { getCategoryLabel } from "@/lib/products";
 import type { Product } from "@/lib/types";
+
+type StockFilter = "all" | "low_stock" | "out_of_stock" | "preorder_only";
+
+const STOCK_FILTERS: { value: StockFilter; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "low_stock", label: "Low stock" },
+  { value: "out_of_stock", label: "Out of stock" },
+  { value: "preorder_only", label: "Preorder only" },
+];
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [stockFilter, setStockFilter] = useState<StockFilter>("all");
 
   useEffect(() => {
     fetch("/api/admin/products")
@@ -32,14 +42,29 @@ export default function AdminProductsPage() {
     setProducts((current) => current.filter((product) => product.id !== id));
   }
 
+  const counts = useMemo(
+    () => ({
+      all: products.length,
+      low_stock: products.filter((p) => getAvailability(p) === "low_stock").length,
+      out_of_stock: products.filter((p) => getAvailability(p) === "out_of_stock").length,
+      preorder_only: products.filter((p) => p.preorderOnly).length,
+    }),
+    [products],
+  );
+
   const filtered = products.filter((product) => {
     const query = search.trim().toLowerCase();
-    if (!query) return true;
-    return (
-      product.name.toLowerCase().includes(query) ||
-      product.id.toLowerCase().includes(query) ||
-      product.category.includes(query)
-    );
+    if (query) {
+      const matchesSearch =
+        product.name.toLowerCase().includes(query) ||
+        product.id.toLowerCase().includes(query) ||
+        product.category.includes(query);
+      if (!matchesSearch) return false;
+    }
+
+    if (stockFilter === "all") return true;
+    if (stockFilter === "preorder_only") return product.preorderOnly;
+    return getAvailability(product) === stockFilter;
   });
 
   return (
@@ -54,6 +79,24 @@ export default function AdminProductsPage() {
           </Link>
         }
       />
+
+      <div className="flex flex-wrap gap-2">
+        {STOCK_FILTERS.map((option) => (
+          <button
+            key={option.value}
+            type="button"
+            onClick={() => setStockFilter(option.value)}
+            className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+              stockFilter === option.value
+                ? "bg-emerald-400 text-[#062318]"
+                : "bg-white/5 text-emerald-100/70 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            {option.label}
+            <span className="ml-1.5 opacity-70">({counts[option.value]})</span>
+          </button>
+        ))}
+      </div>
 
       <div className="flex flex-wrap items-center gap-3">
         <input
@@ -71,7 +114,7 @@ export default function AdminProductsPage() {
         <AdminEmptyState
           emoji="🎱"
           title="No products found"
-          description="Add your first product or adjust your search."
+          description="Add your first product or adjust your search and filters."
           action={
             <Link href="/admin/products/new" className={adminButtonPrimary}>
               Add product
@@ -116,7 +159,7 @@ export default function AdminProductsPage() {
                 <p className="text-xl font-bold text-emerald-300">{formatKes(product.price)}</p>
                 <ProductShopLink productId={product.id} compact />
                 <div className="flex items-center gap-2">
-                  <StockBadge stock={product.stock} />
+                  <StockBadge stock={product.stock} preorderOnly={product.preorderOnly} />
                   {getAvailability(product) === "low_stock" && (
                     <span className="text-xs text-amber-200">Low stock</span>
                   )}

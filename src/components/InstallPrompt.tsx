@@ -48,7 +48,7 @@ export function InstallPrompt() {
   if (hidden || !promptEvent) return null;
 
   return (
-    <div className="fixed bottom-20 left-4 right-4 z-40 mx-auto max-w-md sm:left-auto sm:right-24">
+    <div className="fixed bottom-28 left-4 right-4 z-40 mx-auto max-w-md md:bottom-6 md:left-auto md:right-6">
       <div className="flex items-start gap-3 rounded-2xl border border-emerald-400/20 bg-[#062318] p-4 shadow-xl shadow-black/30">
         <span className="text-2xl">📲</span>
         <div className="flex-1">

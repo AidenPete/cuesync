@@ -13,15 +13,21 @@ export type ShopTab = {
   icon: ShopNavIconName;
   exact?: boolean;
   badge?: number;
+  matchPaths?: string[];
 };
+
+function isTabActive(pathname: string, tab: ShopTab) {
+  if (tab.matchPaths?.some((path) => pathname === path || pathname.startsWith(`${path}/`))) {
+    return true;
+  }
+  if (tab.exact) return pathname === tab.href;
+  if (tab.href === "/login") return pathname.startsWith("/login");
+  return pathname === tab.href || pathname.startsWith(`${tab.href}/`);
+}
 
 function TabLink({ tab }: { tab: ShopTab }) {
   const pathname = usePathname();
-  const active = tab.exact
-    ? pathname === tab.href
-    : tab.href === "/login"
-      ? pathname.startsWith("/login")
-      : pathname.startsWith(tab.href);
+  const active = isTabActive(pathname, tab);
 
   return (
     <Link
@@ -76,15 +82,18 @@ export function useShopTabs(): ShopTab[] {
     },
   ];
 
-  if (mounted && !loading) {
-    if (phone) {
-      tabs.push({ href: "/orders", label: "Orders", icon: "orders" });
-    } else {
-      tabs.push({ href: "/login", label: "Sign in", icon: "account" });
-    }
+  if (mounted && !loading && phone) {
+    tabs.push({ href: "/orders", label: "Orders", icon: "orders" });
   } else {
     tabs.push({ href: "/login", label: "Sign in", icon: "account" });
   }
+
+  tabs.push({
+    href: "/menu",
+    label: "More",
+    icon: "menu",
+    matchPaths: ["/menu", "/contact", "/qr", "/account"],
+  });
 
   return tabs;
 }
@@ -98,15 +107,13 @@ export function ShopBottomNav() {
 
   if (pathname.startsWith("/admin")) return null;
 
-  const ready = mounted;
-
   return (
     <nav
       aria-label="Shop navigation"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#062318]/98 backdrop-blur-md pb-[env(safe-area-inset-bottom)] md:hidden"
     >
-      <div className="mx-auto flex max-w-lg items-stretch justify-around px-2 pt-1">
-        {ready
+      <div className="mx-auto flex max-w-lg items-stretch justify-around px-1 pt-1">
+        {mounted
           ? tabs.map((tab) => <TabLink key={tab.href} tab={tab} />)
           : tabs.map((tab) => <TabPlaceholder key={tab.href} tab={tab} />)}
       </div>
