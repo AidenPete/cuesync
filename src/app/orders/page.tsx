@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { usePhoneAuth } from "@/components/PhoneAuthProvider";
 import { formatKes } from "@/lib/format";
 import { formatPhoneDisplay } from "@/lib/ui";
@@ -19,16 +20,15 @@ type OrderSummary = {
 };
 
 export default function OrdersPage() {
+  const router = useRouter();
   const { phone, loading: authLoading } = usePhoneAuth();
   const [orders, setOrders] = useState<OrderSummary[]>([]);
   const [loading, setLoading] = useState(true);
-  const [resending, setResending] = useState<string | null>(null);
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (authLoading) return;
     if (!phone) {
-      setLoading(false);
+      router.replace("/login?next=/orders");
       return;
     }
 
@@ -36,49 +36,12 @@ export default function OrdersPage() {
       .then((response) => response.json())
       .then((data) => setOrders(data.orders ?? []))
       .finally(() => setLoading(false));
-  }, [phone, authLoading]);
+  }, [phone, authLoading, router]);
 
-  async function resendLink(orderId: string) {
-    setResending(orderId);
-    setMessage("");
-    try {
-      const response = await fetch("/api/orders/resend", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Could not resend.");
-      setMessage(data.message);
-    } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Something went wrong.");
-    } finally {
-      setResending(null);
-    }
-  }
-
-  if (authLoading || loading) {
+  if (authLoading || !phone || loading) {
     return (
       <div className="mx-auto max-w-2xl animate-pulse rounded-3xl border border-white/10 bg-white/5 p-10 text-center text-emerald-100/60">
         Loading your orders…
-      </div>
-    );
-  }
-
-  if (!phone) {
-    return (
-      <div className="mx-auto max-w-lg rounded-3xl border border-white/10 bg-white/5 p-10 text-center">
-        <p className="text-5xl">🔐</p>
-        <h1 className="mt-4 text-2xl font-semibold">Verify your phone</h1>
-        <p className="mt-2 text-emerald-100/70">
-          Sign in with a one-time SMS code to see your orders.
-        </p>
-        <Link
-          href="/login?next=/orders"
-          className="mt-6 inline-block rounded-full bg-emerald-500 px-8 py-3 font-semibold text-white transition hover:bg-emerald-400"
-        >
-          Sign in with SMS
-        </Link>
       </div>
     );
   }
@@ -91,12 +54,6 @@ export default function OrdersPage() {
           Signed in as {formatPhoneDisplay(phone)}
         </p>
       </div>
-
-      {message && (
-        <p className="rounded-xl bg-emerald-500/15 px-4 py-3 text-sm text-emerald-100">
-          {message}
-        </p>
-      )}
 
       {orders.length === 0 ? (
         <div className="rounded-3xl border border-white/10 bg-white/5 p-10 text-center">
@@ -144,24 +101,16 @@ export default function OrdersPage() {
                   </span>
                 </div>
               </div>
-              <div className="mt-4 flex flex-wrap gap-3">
-                {order.linkActive && (
+              {order.linkActive && (
+                <div className="mt-4">
                   <Link
                     href={`/track/${order.token}`}
-                    className="rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+                    className="inline-flex rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
                   >
                     View receipt & track
                   </Link>
-                )}
-                <button
-                  type="button"
-                  onClick={() => resendLink(order.id)}
-                  disabled={resending === order.id}
-                  className="rounded-full bg-emerald-500/20 px-4 py-2 text-sm font-medium text-emerald-200 transition hover:bg-emerald-500/30 disabled:opacity-60"
-                >
-                  {resending === order.id ? "Sending…" : "Resend tracking SMS"}
-                </button>
-              </div>
+                </div>
+              )}
             </li>
           ))}
         </ul>

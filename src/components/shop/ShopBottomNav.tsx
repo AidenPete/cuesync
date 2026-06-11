@@ -74,10 +74,15 @@ export function useShopTabs(): ShopTab[] {
       icon: "cart",
       badge: mounted ? itemCount : 0,
     },
-    { href: "/orders", label: "Orders", icon: "orders" },
   ];
 
-  if (mounted && !loading && !phone) {
+  if (mounted && !loading) {
+    if (phone) {
+      tabs.push({ href: "/orders", label: "Orders", icon: "orders" });
+    } else {
+      tabs.push({ href: "/login", label: "Sign in", icon: "account" });
+    }
+  } else {
     tabs.push({ href: "/login", label: "Sign in", icon: "account" });
   }
 

@@ -43,7 +43,7 @@ function LoginContent() {
       <div className="text-center">
         <h1 className="text-3xl font-bold text-white">Sign in</h1>
         <p className="mt-2 text-emerald-100/70">
-          Verify your phone to view orders and resend tracking links.
+          Verify your phone to view your orders.
         </p>
       </div>
       <OtpForm

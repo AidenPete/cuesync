@@ -63,7 +63,9 @@ export function ShopDesktopSidebar() {
       icon: "cart",
       badge: mounted ? itemCount : 0,
     },
-    { href: "/orders", label: "My orders", icon: "orders" },
+    ...(mounted && !loading && phone
+      ? [{ href: "/orders", label: "My orders", icon: "orders" as const }]
+      : []),
     { href: "/qr", label: "Share QR", icon: "qr" },
   ];
 
