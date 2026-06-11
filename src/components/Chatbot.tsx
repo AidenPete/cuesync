@@ -77,7 +77,7 @@ export function Chatbot() {
         <div className="fixed inset-0 z-40 bg-black/40 sm:hidden" onClick={() => setOpen(false)} />
       )}
 
-      <div className="fixed bottom-20 right-4 z-50 flex flex-col items-end gap-3 md:bottom-6 md:right-6">
+      <div className="fixed bottom-24 right-4 z-50 flex flex-col items-end gap-3 sm:right-6">
         {open && (
           <div className="flex h-[min(70vh,520px)] w-[min(calc(100vw-2rem),380px)] flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#062318] shadow-2xl shadow-black/40">
             <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
