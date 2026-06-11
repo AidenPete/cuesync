@@ -98,7 +98,7 @@ export function ShopBottomNav() {
   return (
     <nav
       aria-label="Shop navigation"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#062318]/98 backdrop-blur-md pb-[env(safe-area-inset-bottom)]"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#062318]/98 backdrop-blur-md pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       <div className="mx-auto flex max-w-lg items-stretch justify-around px-2 pt-1">
         {ready
