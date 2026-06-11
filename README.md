@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CueSync
 
-## Getting Started
+Simple, mobile-first ecommerce site for pool and billiard accessories.
 
-First, run the development server:
+**Domain:** [cuesync.pro](https://cuesync.pro)
+
+## Flow
+
+1. Customer scans the QR code at your shop → opens the catalogue
+2. Browse products, add to cart
+3. Checkout with M-Pesa (mock STK push for now)
+
+## Pages
+
+| Route | Purpose |
+|-------|---------|
+| `/` | Landing page |
+| `/shop` | Product catalogue (QR destination) |
+| `/cart` | Shopping cart |
+| `/checkout` | M-Pesa payment |
+| `/qr` | Printable/downloadable QR code |
+| `/order/success` | Order confirmation |
+
+## Shop assistant (AI chatbot)
+
+Floating chat on every page — answers product questions and takes preorders.
+
+1. Copy `.env.example` to `.env.local`
+2. Add your [OpenAI API key](https://platform.openai.com/api-keys)
+3. Restart the dev server
+
+Preorders are logged server-side (console for now). Wire `src/lib/preorders.ts` to email or a database when you go live.
+
+## Products
+
+Edit [`src/data/products.json`](src/data/products.json) to add or update items.
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Deploy to Vercel (or any Node host) and point **cuesync.pro** to it.
 
-## Learn More
+The QR code at `/qr` links to `https://cuesync.pro/shop`.
 
-To learn more about Next.js, take a look at the following resources:
+## PWA (installable app)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+CueSync is a Progressive Web App. On mobile, users can **Add to Home Screen** / **Install** for a full-screen shop experience.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Manifest:** `src/app/manifest.ts` — opens to `/shop` when launched from home screen
+- **Service worker:** `public/sw.js` — caches static assets and offline fallback
+- **Install prompt:** shown on supported browsers when eligible
+- **Icons:** `public/icons/` — regenerate with `npm run icons`
 
-## Deploy on Vercel
+Requires **HTTPS** in production (localhost works for dev).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## M-Pesa (live)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Checkout is currently **mock mode**. To go live, wire up Safaricom Daraja STK Push in `src/app/api/checkout/route.ts` with your consumer key, secret, and passkey.

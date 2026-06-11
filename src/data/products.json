@@ -1,0 +1,113 @@
+[
+  {
+    "id": "cue-pro-maple",
+    "name": "Pro Maple Cue",
+    "category": "cues",
+    "price": 12500,
+    "description": "Canadian maple shaft, leather tip, balanced for smooth strokes.",
+    "image": "/products/cue-pro-maple.jpg",
+    "accent": "#1a6b4a",
+    "featured": true
+  },
+  {
+    "id": "cue-break-carbon",
+    "name": "Carbon Break Cue",
+    "category": "cues",
+    "price": 18900,
+    "description": "Lightweight carbon fiber break cue with explosive power transfer.",
+    "image": "/products/cue-break-carbon.jpg",
+    "accent": "#2d3748",
+    "featured": true
+  },
+  {
+    "id": "cue-jump",
+    "name": "Jump Cue 42\"",
+    "category": "cues",
+    "price": 9800,
+    "description": "Compact jump cue for clearing obstacles with precision.",
+    "image": "/products/cue-jump.jpg",
+    "accent": "#744210"
+  },
+  {
+    "id": "balls-aramith",
+    "name": "Aramith Pro Ball Set",
+    "category": "balls",
+    "price": 22000,
+    "description": "Tournament-grade phenolic resin balls, 2¼\" standard size.",
+    "image": "/products/balls-aramith.jpg",
+    "accent": "#9b2c2c",
+    "featured": true
+  },
+  {
+    "id": "balls-training",
+    "name": "Training Ball Set",
+    "category": "balls",
+    "price": 4500,
+    "description": "Marked practice balls for aiming drills and spin control.",
+    "image": "/products/balls-training.jpg",
+    "accent": "#2c5282"
+  },
+  {
+    "id": "chalk-master",
+    "name": "Master Chalk (12 pcs)",
+    "category": "chalk",
+    "price": 1200,
+    "description": "Premium blue chalk cubes — less miscue, longer hold.",
+    "image": "/products/chalk-master.jpg",
+    "accent": "#2b6cb0"
+  },
+  {
+    "id": "chalk-taom",
+    "name": "Taom Soft Chalk",
+    "category": "chalk",
+    "price": 2800,
+    "description": "Low-kick formula favored by pros. One cube lasts longer.",
+    "image": "/products/chalk-taom.jpg",
+    "accent": "#6b46c1"
+  },
+  {
+    "id": "glove-left",
+    "name": "Pro Bridge Glove",
+    "category": "gloves",
+    "price": 1800,
+    "description": "Smooth Lycra bridge glove for a friction-free stroke.",
+    "image": "/products/glove-left.jpg",
+    "accent": "#285e61"
+  },
+  {
+    "id": "case-hard",
+    "name": "Hard Cue Case (2×2)",
+    "category": "cases",
+    "price": 8500,
+    "description": "Protects two butts and two shafts with padded dividers.",
+    "image": "/products/case-hard.jpg",
+    "accent": "#4a5568"
+  },
+  {
+    "id": "case-soft",
+    "name": "Soft Cue Sleeve",
+    "category": "cases",
+    "price": 2200,
+    "description": "Lightweight nylon sleeve with shoulder strap.",
+    "image": "/products/case-soft.jpg",
+    "accent": "#2f855a"
+  },
+  {
+    "id": "table-brush",
+    "name": "Table Brush Set",
+    "category": "tables",
+    "price": 3500,
+    "description": "Horsehair brush and rail cleaner for felt maintenance.",
+    "image": "/products/table-brush.jpg",
+    "accent": "#975a16"
+  },
+  {
+    "id": "table-cover",
+    "name": "Fitted Table Cover",
+    "category": "tables",
+    "price": 6200,
+    "description": "Water-resistant cover for 7ft and 8ft tables.",
+    "image": "/products/table-cover.jpg",
+    "accent": "#1a365d"
+  }
+]
