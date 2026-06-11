@@ -4,12 +4,13 @@ import { getAvailability, getStockLabel } from "@/lib/inventory";
 
 type Props = {
   stock: number;
+  preorderOnly?: boolean;
   className?: string;
 };
 
-export function StockBadge({ stock, className = "" }: Props) {
-  const availability = getAvailability({ stock });
-  const label = getStockLabel({ stock });
+export function StockBadge({ stock, preorderOnly = false, className = "" }: Props) {
+  const availability = getAvailability({ stock, preorderOnly });
+  const label = getStockLabel({ stock, preorderOnly });
 
   const styles = {
     in_stock: "bg-emerald-500/20 text-emerald-200",

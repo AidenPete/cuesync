@@ -88,6 +88,7 @@ export function ProductForm({
         accent: String(form.get("accent")).trim(),
         featured: form.get("featured") === "on",
         stock: Number(form.get("stock")),
+        preorderOnly: form.get("preorderOnly") === "on",
         highlights,
       });
     } catch (err) {
@@ -224,6 +225,18 @@ export function ProductForm({
           rows={4}
           className={adminInputClassName}
         />
+      </label>
+
+      <label className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#041912]/60 px-4 py-3">
+        <input
+          name="preorderOnly"
+          type="checkbox"
+          defaultChecked={initial?.preorderOnly}
+          className="h-4 w-4 rounded border-white/20"
+        />
+        <span className="text-sm text-emerald-100">
+          Preorder only — hide add to cart even when stock is available
+        </span>
       </label>
 
       <label className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#041912]/60 px-4 py-3">

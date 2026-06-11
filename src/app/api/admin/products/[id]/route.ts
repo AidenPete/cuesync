@@ -45,6 +45,10 @@ export async function PUT(request: Request, { params }: Params) {
     body.featured !== undefined ? Boolean(body.featured) : existing.featured;
   const stock =
     body.stock !== undefined ? Math.max(0, Number(body.stock)) : existing.stock;
+  const preorderOnly =
+    body.preorderOnly !== undefined
+      ? Boolean(body.preorderOnly)
+      : existing.preorderOnly;
 
   if (!name || !isValidCategory(category) || !price || !description) {
     return NextResponse.json(
@@ -64,6 +68,7 @@ export async function PUT(request: Request, { params }: Params) {
     highlights,
     featured,
     stock,
+    preorderOnly,
   });
 
   return NextResponse.json({ product: result.product });

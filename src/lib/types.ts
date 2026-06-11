@@ -18,6 +18,8 @@ export type Product = {
   featured?: boolean;
   /** Units available to sell. 0 = out of stock. */
   stock: number;
+  /** When true, customers can only preorder — never add to cart. */
+  preorderOnly?: boolean;
 };
 
 export type CartItem = {

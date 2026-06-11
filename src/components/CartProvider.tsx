@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { isInStock, maxAddQuantity } from "@/lib/inventory";
+import { canAddToCart, isInStock, maxAddQuantity } from "@/lib/inventory";
 import type { CartItem, Product } from "@/lib/types";
 
 type CartContextValue = {
@@ -52,7 +52,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setItems((current) => {
       const existing = current.find((item) => item.product.id === product.id);
       const currentQty = existing?.quantity ?? 0;
-      if (!isInStock(product, currentQty + 1)) return current;
+      if (!canAddToCart(product, currentQty + 1)) return current;
 
       if (existing) {
         return current.map((item) =>

@@ -45,11 +45,21 @@ export async function POST(request: Request) {
   }
 
   for (const item of lineItems) {
-    if (!isInStock(item!.product, item!.quantity)) {
+    const product = item!.product;
+    if (product.preorderOnly) {
       return NextResponse.json(
         {
           success: false,
-          message: `${item!.product.name} only has ${item!.product.stock} left in stock.`,
+          message: `${product.name} is preorder only.`,
+        },
+        { status: 400 },
+      );
+    }
+    if (!isInStock(product, item!.quantity)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `${product.name} only has ${product.stock} left in stock.`,
         },
         { status: 400 },
       );

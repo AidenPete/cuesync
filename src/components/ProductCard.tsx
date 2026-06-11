@@ -23,7 +23,7 @@ export function ProductCard({ product }: Props) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#062318]/80 via-transparent to-transparent" />
           <div className="absolute left-3 top-3">
-            <StockBadge stock={product.stock} />
+            <StockBadge stock={product.stock} preorderOnly={product.preorderOnly} />
           </div>
           {product.featured && (
             <span className="absolute right-3 top-3 rounded-full bg-amber-400 px-2.5 py-1 text-xs font-bold text-[#062318]">

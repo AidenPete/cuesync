@@ -30,6 +30,7 @@ export async function POST(request: Request) {
     : [];
   const featured = Boolean(body.featured);
   const stock = Number(body.stock ?? 10);
+  const preorderOnly = Boolean(body.preorderOnly);
   const id = String(body.id ?? slugifyId(name)).trim();
 
   if (!name || !isValidCategory(category) || !price || !description) {
@@ -50,6 +51,7 @@ export async function POST(request: Request) {
     highlights,
     featured,
     stock: Number.isFinite(stock) ? Math.max(0, stock) : 10,
+    preorderOnly,
   });
 
   if (result.error) {

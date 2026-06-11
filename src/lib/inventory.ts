@@ -13,10 +13,27 @@ export function normalizeProduct(product: Product): Product {
   return {
     ...product,
     stock: normalizeStock(product.stock),
+    preorderOnly: Boolean(product.preorderOnly),
   };
 }
 
-export function getAvailability(product: Pick<Product, "stock">): Availability {
+export function canAddToCart(
+  product: Pick<Product, "stock" | "preorderOnly">,
+  currentInCart = 0,
+): boolean {
+  if (product.preorderOnly) return false;
+  return maxAddQuantity(product, currentInCart) > 0;
+}
+
+export function showPreorder(product: Pick<Product, "stock" | "preorderOnly">): boolean {
+  if (product.preorderOnly) return true;
+  return !isInStock(product);
+}
+
+export function getAvailability(
+  product: Pick<Product, "stock" | "preorderOnly">,
+): Availability {
+  if (product.preorderOnly) return "out_of_stock";
   const stock = normalizeStock(product.stock);
   if (stock <= 0) return "out_of_stock";
   if (stock <= LOW_STOCK_THRESHOLD) return "low_stock";
@@ -27,9 +44,10 @@ export function isInStock(product: Pick<Product, "stock">, quantity = 1): boolea
   return normalizeStock(product.stock) >= quantity;
 }
 
-export function getStockLabel(product: Pick<Product, "stock">): string {
+export function getStockLabel(product: Pick<Product, "stock" | "preorderOnly">): string {
+  if (product.preorderOnly) return "Preorder only";
   const stock = normalizeStock(product.stock);
-  if (stock <= 0) return "Out of stock";
+  if (stock <= 0) return "Preorder only";
   if (stock <= LOW_STOCK_THRESHOLD) return `${stock} left`;
   return "In stock";
 }

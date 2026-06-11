@@ -9,6 +9,7 @@ export async function POST(request: Request) {
   const body = await request.json();
 
   const type = body.type === "wishlist" ? "wishlist" : "preorder";
+  const source = body.source === "chat" ? "chat" : "shop";
   const name = String(body.name ?? "").trim();
   const phone = normalizePhone(String(body.phone ?? ""));
   const productId = String(body.productId ?? "").trim();
@@ -30,6 +31,13 @@ export async function POST(request: Request) {
     );
   }
 
+  if (type === "wishlist" && source === "shop") {
+    return NextResponse.json(
+      { message: "Wishlist is not available. Preorder this item instead." },
+      { status: 400 },
+    );
+  }
+
   if (type === "preorder" && !deliveryLocation) {
     return NextResponse.json(
       { message: "Delivery location is required for preorders." },
@@ -45,7 +53,7 @@ export async function POST(request: Request) {
     }
     resolvedName = product.name;
 
-    if (type === "preorder" && isInStock(product)) {
+    if (type === "preorder" && isInStock(product) && !product.preorderOnly) {
       return NextResponse.json(
         { message: "This item is in stock — add it to your cart instead." },
         { status: 400 },
@@ -55,7 +63,7 @@ export async function POST(request: Request) {
 
   const record = await saveProductRequest({
     type: type satisfies ProductRequestType,
-    source: "shop",
+    source,
     productId: productId || undefined,
     productName: resolvedName,
     name,
